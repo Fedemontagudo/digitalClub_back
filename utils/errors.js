@@ -1,4 +1,4 @@
-const debug = require("debug");
+const debug = require("debug")("digitalclub:error");
 const chalk = require("chalk");
 const { validationResult } = require("express-validator");
 
@@ -15,8 +15,8 @@ const serverError = (err, puerto) => {
 };
 const notFoundError = (req, res, next) => {
   const error = generaError("El endpoint no existe", 404);
-  next(error);
 };
+
 const generalError = (err, req, res, next) => {
   const error = {
     codigo: err.codigo || 500,

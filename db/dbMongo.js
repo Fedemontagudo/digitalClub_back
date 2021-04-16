@@ -1,5 +1,5 @@
 require("dotenv").config();
-const debug = require("debug")("facturas:dbMongo");
+const debug = require("debug")("digitalclub:dbMongo");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
 
