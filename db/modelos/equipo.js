@@ -28,3 +28,5 @@ const EquipoSchema = new Schema({
 });
 
 const Equipo = model("Equipo", EquipoSchema, "equipos");
+
+module.exports = Equipo;

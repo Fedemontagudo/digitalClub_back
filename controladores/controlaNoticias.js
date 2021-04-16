@@ -1,4 +1,4 @@
-const Noticia = require("../db/modelos/noticias");
+const Noticia = require("../db/modelos/noticia");
 const { generaError } = require("../utils/errors");
 
 const getNoticias = async () => {

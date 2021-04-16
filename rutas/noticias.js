@@ -4,15 +4,21 @@ const {
   getNoticia,
   crearNoticia,
   sustituirNoticia,
-} = require("../controladores/controlaNoticas");
+} = require("../controladores/controlaNoticias");
+
 const { notFoundError } = require("../utils/errors");
+
+const baseNoticias = noticias => ({
+  total: noticias.length,
+  datos: noticias
+});
 
 const router = express.Router();
 
 router.get("/", async (req, res, next) => {
   const queryParams = req.query;
   const noticiasDevueltas = await getNoticias();
-  res.json(noticiasDevueltas);
+  res.json(baseNoticias(noticiasDevueltas));
 });
 
 router.get("/noticia/:idNoticia", async (req, res, next) => {
@@ -28,7 +34,6 @@ router.post("/", async (req, res, next) => {
     return next(error400);
   }
   const nuevaNoticia = req.body;
-  console.log(nuevaNoticia);
   const { noticia, error } = await crearNoticia(nuevaNoticia);
   if (error) {
     next(error);

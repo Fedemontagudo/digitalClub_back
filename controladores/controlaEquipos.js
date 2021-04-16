@@ -1,3 +1,3 @@
-const Equipo = require("../db/modelos/equipos");
+const Equipo = require("../db/modelos/equipo");
 
 module.exports = {};
