@@ -1,9 +1,17 @@
 const { Schema, model } = require("mongoose");
 
-const EquipoSchema = new Schema({
+const StaffSchema = new Schema({
   nombre: {
     type: String,
     required: true
+  },
+  fecha_nacimiento: {
+    type: Date,
+    required: true
+  },
+  rol: {
+    type: String,
+    require: true
   },
   img: {
     type: {
@@ -17,14 +25,8 @@ const EquipoSchema = new Schema({
       }
     }
   },
-  staff: {
-    type: [String],
-    required: true
-  },
-  jugadores: {
-    type: [String],
-    required: true
-  }
 });
 
-const Equipo = model("Equipo", EquipoSchema, "equipos");
+const Staff = model("Staff", StaffSchema, "staffs");
+
+module.exports = Staff;

@@ -3,7 +3,7 @@ const debug = require("debug")("facturas:dbMongo");
 const chalk = require("chalk");
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb+srv://digitalclub:digitalclub@cluster0.l4exx.mongodb.net/digitalclub", {
+mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useFindAndModify: false

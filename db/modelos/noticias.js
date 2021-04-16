@@ -6,15 +6,23 @@ const NoticiaSchema = new Schema({
     required: true
   },
   img: {
-    type: String,
-    required: true
+    type: {
+      link: {
+        type: String,
+        required: true
+      },
+      alt: {
+        type: String,
+        required: true
+      }
+    }
   },
   create_add: {
-    type: Date,
+    type: Number,
     required: true
   },
   update_add: {
-    type: Date,
+    type: Number,
     required: true
   },
   texto: {
