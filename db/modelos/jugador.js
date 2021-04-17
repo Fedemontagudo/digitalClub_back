@@ -6,7 +6,7 @@ const JugadorSchema = new Schema({
     required: true
   },
   fecha_nacimiento: {
-    type: Date,
+    type: String,
     required: true
   },
   dorsal: {

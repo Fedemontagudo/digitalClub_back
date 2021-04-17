@@ -19,7 +19,6 @@ const router = express.Router();
 router.get("/", async (req, res, next) => {
   const queryParams = req.query;
   const staffdevuelto = await getStaff();
-  console.log(staffdevuelto);
   res.json(baseStaff(staffdevuelto));
 });
 
@@ -39,7 +38,10 @@ router.post("/", async (req, res, next) => {
   if (error) {
     next(error);
   } else {
-    res.status(201).json({ id: staff.id });
+    res.status(201).json({
+      id: staff.id,
+      nombre: staff.nombre
+    });
   }
 });
 

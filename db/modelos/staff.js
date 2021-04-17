@@ -6,12 +6,11 @@ const StaffSchema = new Schema({
     required: true
   },
   fecha_nacimiento: {
-    type: Number,
+    type: String,
     required: true
   },
   rol: {
     type: String,
-    require: true
   },
   img: {
     type: {

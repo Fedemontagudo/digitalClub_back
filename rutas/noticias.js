@@ -38,7 +38,10 @@ router.post("/", async (req, res, next) => {
   if (error) {
     next(error);
   } else {
-    res.status(201).json({ id: noticia.id });
+    res.status(201).json({
+      id: noticia.id,
+      titulo: noticia.titulo
+    });
   }
 });
 
