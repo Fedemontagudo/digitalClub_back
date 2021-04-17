@@ -3,9 +3,11 @@ const { Schema, model } = require("mongoose");
 const StaffSchema = new Schema({
   nombre: {
     type: String,
+    required: true
   },
   fecha_nacimiento: {
     type: Number,
+    required: true
   },
   rol: {
     type: String,
@@ -25,6 +27,6 @@ const StaffSchema = new Schema({
   },
 });
 
-const Staff = model("Staff", StaffSchema, "staffs");
+const Staff = model("Staff", StaffSchema, "staff");
 
 module.exports = Staff;

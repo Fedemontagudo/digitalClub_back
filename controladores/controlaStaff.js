@@ -17,7 +17,7 @@ const crearStaff = async nuevoStaff => {
     error: null
   };
   const staffEncontrado = await Staff.findOne({
-    titulo: nuevoStaff.titulo
+    titulo: nuevoStaff.nombre
   });
   if (staffEncontrado) {
     const error = generaError("Ya existe esta persona en el staff team", 409);
