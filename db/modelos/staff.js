@@ -25,6 +25,11 @@ const StaffSchema = new Schema({
       }
     }
   },
+}, {
+  timestamps: {
+    createdAt: "created_at",
+    updatedAt: "updated_at"
+  }
 });
 
 const Staff = model("Staff", StaffSchema, "staff");

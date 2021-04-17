@@ -17,17 +17,13 @@ const NoticiaSchema = new Schema({
       }
     }
   },
-  create_add: {
-    type: Number,
-    required: true
-  },
-  update_add: {
-    type: Number,
-    required: true
-  },
   texto: {
     type: String,
-    required: true
+  }
+}, {
+  timestamps: {
+    createdAt: "created_at",
+    updatedAt: "updated_at"
   }
 });
 

@@ -29,6 +29,11 @@ const JugadorSchema = new Schema({
       }
     }
   },
+}, {
+  timestamps: {
+    createdAt: "created_at",
+    updatedAt: "updated_at"
+  }
 });
 
 const Jugador = model("Jugador", JugadorSchema, "jugadores");
