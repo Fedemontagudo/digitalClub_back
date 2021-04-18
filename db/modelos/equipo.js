@@ -19,11 +19,9 @@ const EquipoSchema = new Schema({
   },
   staff: {
     type: [String],
-    required: true
   },
   jugadores: {
     type: [String],
-    required: true
   }
 }, {
   timestamps: {
