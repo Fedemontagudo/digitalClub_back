@@ -20,7 +20,7 @@ const crearNoticia = async nuevaNoticia => {
     titulo: nuevaNoticia.titulo
   });
   if (noticiaEncontrada) {
-    const error = generaError("Ya existe el proyecto", 409);
+    const error = generaError("Ya existe la noticia", 409);
     respuesta.error = error;
   } else {
     const nuevaNoticiaBD = await Noticia.create(nuevaNoticia);
