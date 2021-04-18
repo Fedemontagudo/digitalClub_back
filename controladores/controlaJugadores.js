@@ -20,7 +20,7 @@ const crearJugador = async nuevoJugador => {
     titulo: nuevoJugador.nombre
   });
   if (jugadorEncontrado) {
-    const error = generaError("Ya existe esta persona en la lista de equipos", 409);
+    const error = generaError("Ya existe este jugador en la lista de equipos", 409);
     respuesta.error = error;
   } else {
     const nuevoJugadorBD = await Jugador.create(nuevoJugador);
