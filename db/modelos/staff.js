@@ -12,6 +12,10 @@ const StaffSchema = new Schema({
   rol: {
     type: String,
   },
+  equipo: {
+    type: String,
+    require: true
+  },
   img: {
     type: {
       link: {

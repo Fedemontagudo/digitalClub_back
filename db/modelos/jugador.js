@@ -17,6 +17,10 @@ const JugadorSchema = new Schema({
     type: String,
     require: true
   },
+  equipo: {
+    type: String,
+    require: true
+  },
   img: {
     type: {
       link: {
