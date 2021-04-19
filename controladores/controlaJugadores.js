@@ -64,6 +64,12 @@ const borrarJugador = async idJugador => {
   };
   if (jugadorEncontrado) {
     respuesta.jugador = jugadorEncontrado;
+    const idJugadorABorrar = jugadorEncontrado.id;
+    const idEquipo = jugadorEncontrado.equipo;
+    const jugadorIdEquipo = await Equipo.findByIdAndUpdate(
+      idEquipo,
+      { $pull: { jugadores: idJugador } }
+    );
     return respuesta;
   }
 };

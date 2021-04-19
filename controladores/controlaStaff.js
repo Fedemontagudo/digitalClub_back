@@ -64,6 +64,12 @@ const borrarStaff = async idStaff => {
   };
   if (staffEncontrado) {
     respuesta.staff = staffEncontrado;
+    const idStaffABorrar = staffEncontrado.id;
+    const idEquipo = staffEncontrado.equipo;
+    const staffIdEquipo = await Equipo.findByIdAndUpdate(
+      idStaff,
+      { $pull: { staff: idStaff } }
+    );
     return respuesta;
   }
 };
