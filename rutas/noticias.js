@@ -4,6 +4,7 @@ const {
   getNoticia,
   crearNoticia,
   sustituirNoticia,
+  borrarNoticia,
 } = require("../controladores/controlaNoticias");
 
 const { notFoundError } = require("../utils/errors");
@@ -49,6 +50,16 @@ router.put("/:idNoticia", async (req, res, next) => {
   const { idNoticia } = req.params;
   const noticiaModificada = req.body;
   const { error, noticia } = await sustituirNoticia(idNoticia, noticiaModificada);
+  if (error) {
+    next(error);
+  } else {
+    res.json(noticia);
+  }
+});
+
+router.delete("/:idNoticia", async (req, res, next) => {
+  const { idNoticia } = req.params;
+  const { error, noticia } = await borrarNoticia(idNoticia);
   if (error) {
     next(error);
   } else {

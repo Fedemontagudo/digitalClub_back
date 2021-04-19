@@ -49,9 +49,22 @@ const sustituirStaff = async (idStaff, StaffModificado) => {
   return respuesta;
 };
 
+const borrarStaff = async idStaff => {
+  const staffEncontrado = await Staff.findByIdAndDelete(idStaff);
+  const respuesta = {
+    staff: null,
+    error: null
+  };
+  if (staffEncontrado) {
+    respuesta.staff = staffEncontrado;
+    return respuesta;
+  }
+};
+
 module.exports = {
   getStaff,
   getOneStaff,
   crearStaff,
-  sustituirStaff
+  sustituirStaff,
+  borrarStaff
 };

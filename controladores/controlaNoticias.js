@@ -49,9 +49,22 @@ const sustituirNoticia = async (idNoticia, noticiaModificada) => {
   return respuesta;
 };
 
+const borrarNoticia = async idNoticia => {
+  const noticiaEncontrada = await Noticia.findByIdAndDelete(idNoticia);
+  const respuesta = {
+    noticia: null,
+    error: null
+  };
+  if (noticiaEncontrada) {
+    respuesta.noticia = noticiaEncontrada;
+    return respuesta;
+  }
+};
+
 module.exports = {
   getNoticias,
   getNoticia,
   crearNoticia,
-  sustituirNoticia
+  sustituirNoticia,
+  borrarNoticia
 };

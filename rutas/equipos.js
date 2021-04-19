@@ -1,7 +1,9 @@
 const express = require("express");
 const {
   getEquipo,
-  crearEquipo
+  crearEquipo,
+  borrarEquipo,
+  sustituirEquipo
 } = require("../controladores/controlaEquipos");
 
 const { notFoundError } = require("../utils/errors");
@@ -33,6 +35,27 @@ router.post("/", async (req, res, next) => {
       id: nuevoEquipo.id,
       nombre: nuevoEquipo.nombre
     });
+  }
+});
+
+router.put("/:idEquipo", async (req, res, next) => {
+  const { idEquipo } = req.params;
+  const equipoModificado = req.body;
+  const { error, equipo } = await sustituirEquipo(idEquipo, equipoModificado);
+  if (error) {
+    next(error);
+  } else {
+    res.json(equipo);
+  }
+});
+
+router.delete("/:idEquipo", async (req, res, next) => {
+  const { idEquipo } = req.params;
+  const { error, equipo } = await borrarEquipo(idEquipo);
+  if (error) {
+    next(error);
+  } else {
+    res.json(equipo);
   }
 });
 

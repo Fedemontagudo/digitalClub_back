@@ -4,7 +4,8 @@ const {
   getStaff,
   getOneStaff,
   crearStaff,
-  sustituirStaff
+  sustituirStaff,
+  borrarStaff
 } = require("../controladores/controlaStaff");
 
 const { notFoundError } = require("../utils/errors");
@@ -49,6 +50,16 @@ router.put("/:idStaff", async (req, res, next) => {
   const { idStaff } = req.params;
   const StaffModificado = req.body;
   const { error, staff } = await sustituirStaff(idStaff, StaffModificado);
+  if (error) {
+    next(error);
+  } else {
+    res.json(staff);
+  }
+});
+
+router.delete("/:idStaff", async (req, res, next) => {
+  const { idStaff } = req.params;
+  const { error, staff } = await borrarStaff(idStaff);
   if (error) {
     next(error);
   } else {

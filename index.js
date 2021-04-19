@@ -9,6 +9,7 @@ const rutasNoticias = require("./rutas/noticias");
 const rutasEquipos = require("./rutas/equipos");
 const rutasStaff = require("./rutas/staff");
 const rutasJugadores = require("./rutas/jugadores");
+const rutasUsuarios = require("./rutas/usuarios");
 const {
   generaError, serverError, notFoundError, generalError
 } = require("./utils/errors");
@@ -31,5 +32,6 @@ app.use("/noticias", rutasNoticias);
 app.use("/equipos", rutasEquipos);
 app.use("/staff", rutasStaff);
 app.use("/jugadores", rutasJugadores);
+app.use("/usuarios", rutasUsuarios);
 app.use(notFoundError);
 app.use(generalError);

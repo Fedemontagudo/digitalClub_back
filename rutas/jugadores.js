@@ -4,7 +4,8 @@ const {
   getJugadores,
   getOneJugador,
   crearJugador,
-  sustituirJugador
+  sustituirJugador,
+  borrarJugador
 } = require("../controladores/controlaJugadores");
 
 const { notFoundError } = require("../utils/errors");
@@ -49,6 +50,16 @@ router.put("/:idJugador", async (req, res, next) => {
   const { idJugador } = req.params;
   const jugadorModificado = req.body;
   const { error, jugador } = await sustituirJugador(idJugador, jugadorModificado);
+  if (error) {
+    next(error);
+  } else {
+    res.json(jugador);
+  }
+});
+
+router.delete("/:idJugador", async (req, res, next) => {
+  const { idJugador } = req.params;
+  const { error, jugador } = await borrarJugador(idJugador);
   if (error) {
     next(error);
   } else {

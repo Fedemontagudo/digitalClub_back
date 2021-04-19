@@ -49,9 +49,22 @@ const sustituirJugador = async (idJugador, jugadorModificado) => {
   return respuesta;
 };
 
+const borrarJugador = async idJugador => {
+  const jugadorEncontrado = await Jugador.findByIdAndDelete(idJugador);
+  const respuesta = {
+    jugador: null,
+    error: null
+  };
+  if (jugadorEncontrado) {
+    respuesta.jugador = jugadorEncontrado;
+    return respuesta;
+  }
+};
+
 module.exports = {
   getJugadores,
   getOneJugador,
   crearJugador,
-  sustituirJugador
+  sustituirJugador,
+  borrarJugador
 };
