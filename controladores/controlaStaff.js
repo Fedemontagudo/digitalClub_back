@@ -2,7 +2,7 @@ const Staff = require("../db/modelos/staff");
 const { generaError } = require("../utils/errors");
 
 const getStaff = async () => {
-  const staff = await Staff.find().sort({ date: 1 });
+  const staff = await Staff.find().sort({ date: -1 });
   return staff;
 };
 
