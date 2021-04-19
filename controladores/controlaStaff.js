@@ -1,3 +1,4 @@
+const Equipo = require("../db/modelos/equipo");
 const Staff = require("../db/modelos/staff");
 const { generaError } = require("../utils/errors");
 
@@ -24,6 +25,12 @@ const crearStaff = async nuevoStaff => {
     respuesta.error = error;
   } else {
     const nuevoStaffBD = await Staff.create(nuevoStaff);
+    const idStaff = nuevoStaffBD.id;
+    const idEquipo = nuevoStaff.equipo;
+    const staffIdEquipo = await Equipo.findByIdAndUpdate(
+      idEquipo,
+      { $push: { staff: idStaff } }
+    );
     respuesta.staff = nuevoStaffBD;
   }
   return respuesta;
