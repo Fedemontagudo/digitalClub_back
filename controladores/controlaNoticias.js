@@ -2,7 +2,7 @@ const Noticia = require("../db/modelos/noticia");
 const { generaError } = require("../utils/errors");
 
 const getNoticias = async () => {
-  const noticias = await Noticia.find().sort({ date: -1 });
+  const noticias = await Noticia.find().sort({ created_at: -1 });
   return noticias;
 };
 

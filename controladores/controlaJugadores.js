@@ -2,7 +2,7 @@ const Jugador = require("../db/modelos/jugador");
 const { generaError } = require("../utils/errors");
 
 const getJugadores = async () => {
-  const jugador = await Jugador.find().sort({ date: -1 });
+  const jugador = await Jugador.find().sort({ created_at: -1 });
   return jugador;
 };
 
