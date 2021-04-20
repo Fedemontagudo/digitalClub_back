@@ -49,17 +49,24 @@ router.post("/", async (req, res, next) => {
     });
   }
 });
-
+// hay que meter toda esta mierda dentro del endpoint anterior, si me mandan noticia sin imagen, la subo,
+// si me la mandan con imagen, subo la noticia y la imagen
 router.post("/archivos",
   multer().single("foto"),
   (req, res, next) => {
-    const archivoMemoria = bucket.file(req.file.originalname);
-    const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
-    archivoStream.end(req.file.buffer);
-    archivoStream.on("error", err => console.log(err));
-    archivoStream.on("finish", () => {
-      console.log("Archivo subido");
-    });
+    if (req.file) {
+      const archivoMemoria = bucket.file(req.file.originalname);
+      const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
+      console.log(req.file.buffer);
+      archivoStream.end(req.file.buffer);
+      archivoStream.on("error", err => console.log(err));
+      archivoStream.on("finish", () => {
+        console.log("Archivo subido");
+      });
+      res.json("Archivo subido");
+    } else {
+      res.json("no me has mandado nada");
+    }
   });
 
 router.put("/:idNoticia", async (req, res, next) => {
