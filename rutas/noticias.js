@@ -37,16 +37,17 @@ router.post("/", multer().single("foto"), async (req, res, next) => {
   if (error400) {
     return next(error400);
   }
-  if (req.body) {
-    const nuevaNoticia = req.body;
-    const { noticia, error } = await crearNoticia(nuevaNoticia);
-    res.status(201).json({
-      id: noticia.id,
-      titulo: noticia.titulo
-    });
-  } else {
-    res.json("no me has pasado una noticia");
+  if (req.file) {
+    if (req.body) {
+      const nuevaNoticia = req.body;
+      const nuevaImagen = req.file;
+
+      const { noticia, error } = await crearNoticia(nuevaNoticia, nuevaImagen);
+    }
   }
+  res.status(201).json({
+    hola: "hola"
+  });
 });
 // hay que meter toda esta mierda dentro del endpoint anterior, si me mandan noticia sin imagen, la subo,
 // si me la mandan con imagen, subo la noticia y la imagen
