@@ -1,4 +1,7 @@
 const express = require("express");
+const multer = require("multer");
+const admin = require("firebase-admin");
+
 const {
   getNoticias,
   getNoticia,
@@ -8,6 +11,7 @@ const {
 } = require("../controladores/controlaNoticias");
 
 const { notFoundError } = require("../utils/errors");
+const bucket = require("../utils/bucketfb");
 
 const baseNoticias = noticias => ({
   total: noticias.length,
@@ -45,6 +49,18 @@ router.post("/", async (req, res, next) => {
     });
   }
 });
+
+router.post("/archivos",
+  multer().single("foto"),
+  (req, res, next) => {
+    const archivoMemoria = bucket.file(req.file.originalname);
+    const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
+    archivoStream.end(req.file.buffer);
+    archivoStream.on("error", err => console.log(err));
+    archivoStream.on("finish", () => {
+      console.log("Archivo subido");
+    });
+  });
 
 router.put("/:idNoticia", async (req, res, next) => {
   const { idNoticia } = req.params;

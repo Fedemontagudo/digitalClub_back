@@ -16,7 +16,6 @@ const baseEquipo = equipo => ({
 });
 
 router.get("/", async (req, res, next) => {
-  const queryParams = req.query;
   const equipoDevuelto = await getEquipo();
   res.json(baseEquipo(equipoDevuelto));
 });

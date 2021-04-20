@@ -16,16 +16,8 @@ const crearNoticia = async nuevaNoticia => {
     noticia: null,
     error: null
   };
-  const noticiaEncontrada = await Noticia.findOne({
-    titulo: nuevaNoticia.titulo
-  });
-  if (noticiaEncontrada) {
-    const error = generaError("Ya existe la noticia", 409);
-    respuesta.error = error;
-  } else {
-    const nuevaNoticiaBD = await Noticia.create(nuevaNoticia);
-    respuesta.noticia = nuevaNoticiaBD;
-  }
+  const nuevaNoticiaBD = await Noticia.create(nuevaNoticia);
+  respuesta.noticia = nuevaNoticiaBD;
   return respuesta;
 };
 

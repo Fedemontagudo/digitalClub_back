@@ -17,12 +17,11 @@ const EquipoSchema = new Schema({
       }
     }
   },
-  staff: {
-    type: [String],
-  },
-  jugadores: {
-    type: [String],
-  }
+  staff:
+    [{ type: Schema.Types.ObjectId, ref: "Staff" }],
+  jugadores:
+    [{ type: Schema.Types.ObjectId, ref: "Jugador" }]
+
 }, {
   timestamps: {
     createdAt: "created_at",

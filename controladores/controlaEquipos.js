@@ -2,7 +2,11 @@ const Equipo = require("../db/modelos/equipo");
 const { generaError } = require("../utils/errors");
 
 const getEquipo = async () => {
-  const equipo = await Equipo.find().sort({ created_at: -1 });
+  const equipo = await Equipo
+    .find()
+    .sort({ created_at: -1 })
+    .populate("jugadores")
+    .populate("staff");
   return equipo;
 };
 
