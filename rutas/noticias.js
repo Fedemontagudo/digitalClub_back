@@ -28,25 +28,24 @@ router.get("/", async (req, res, next) => {
 
 router.get("/noticia/:idNoticia", async (req, res, next) => {
   const id = req.params.idNoticia;
-  console.log("hola");
   const noticia = await getNoticia(id);
   res.json(noticia);
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", multer().single("foto"), async (req, res, next) => {
   const error400 = notFoundError(req);
   if (error400) {
     return next(error400);
   }
-  const nuevaNoticia = req.body;
-  const { noticia, error } = await crearNoticia(nuevaNoticia);
-  if (error) {
-    next(error);
-  } else {
+  if (req.body) {
+    const nuevaNoticia = req.body;
+    const { noticia, error } = await crearNoticia(nuevaNoticia);
     res.status(201).json({
       id: noticia.id,
       titulo: noticia.titulo
     });
+  } else {
+    res.json("no me has pasado una noticia");
   }
 });
 // hay que meter toda esta mierda dentro del endpoint anterior, si me mandan noticia sin imagen, la subo,
@@ -57,11 +56,9 @@ router.post("/archivos",
     if (req.file) {
       const archivoMemoria = bucket.file(req.file.originalname);
       const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
-      console.log(req.file.buffer);
       archivoStream.end(req.file.buffer);
       archivoStream.on("error", err => console.log(err));
       archivoStream.on("finish", () => {
-        console.log("Archivo subido");
       });
       res.json("Archivo subido");
     } else {
