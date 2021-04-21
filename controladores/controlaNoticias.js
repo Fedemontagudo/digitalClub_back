@@ -46,21 +46,24 @@ const sustituirNoticia = async (idNoticia, noticiaModificada, nuevaImagen) => {
   };
   if (noticiaEncontrada) {
     await noticiaEncontrada.updateOne(noticiaModificada);
-    respuesta.noticia = noticiaModificada;
-    const archivoMemoria = bucket.file(`noticia_${idNoticia}`);
-    const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
-    archivoStream.end(nuevaImagen.buffer);
-    archivoStream.on("error", err => console.log(err));
-    archivoStream.on("finish", () => {
-    });
-    /*     const noticiaParaPonerLinkImg = await Noticia.findById(noticiaModificada._id);
-
-    noticiaParaPonerLinkImg.img = {
-      link: `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/noticia_${noticiaModificada._id}?alt=media`
-    };
-    noticiaParaPonerLinkImg.save();
-    respuesta.noticia = noticiaModificada;
-    return respuesta; */
+    if (nuevaImagen) {
+      respuesta.noticia = noticiaModificada;
+      const archivoMemoria = bucket.file(`noticia_${idNoticia}`);
+      const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
+      archivoStream.end(nuevaImagen.buffer);
+      archivoStream.on("error", err => console.log(err));
+      archivoStream.on("finish", () => {
+      });
+      const noticiaParaPonerLinkImg = await Noticia.findById(idNoticia);
+      noticiaParaPonerLinkImg.img = {
+        link: `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/noticia_${idNoticia}?alt=media`,
+        alt: noticiaModificada.alt ? noticiaModificada.alt : "una imagen sin alt"
+      };
+      noticiaParaPonerLinkImg.save();
+      respuesta.noticia = noticiaParaPonerLinkImg;
+    } else {
+      respuesta.noticia = noticiaModificada;
+    }
   }
   return respuesta;
 };

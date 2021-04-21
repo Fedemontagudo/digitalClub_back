@@ -39,13 +39,18 @@ router.post("/", multer().single("foto"), async (req, res, next) => {
     if (req.body) {
       const nuevoEquipo = req.body;
       const nuevaImagen = req.file;
+      const jugadores = JSON.parse(req.body.jugadores);
+      console.log(jugadores);
 
       const { equipo, error } = await crearEquipo(nuevoEquipo, nuevaImagen);
     }
+  } else {
+    const nuevoEquipo = req.body;
+    const { equipo, error } = await crearEquipo(nuevoEquipo);
+    res.status(201).json({
+      equipo
+    });
   }
-  res.status(201).json({
-
-  });
 });
 
 router.put("/:idEquipo", multer().single("foto"), async (req, res, next) => {
