@@ -12,7 +12,8 @@ const getEquipo = async () => {
 };
 
 const getUnEquipo = async id => {
-  const equipo = await Equipo.findById(id);
+  const equipo = await Equipo.findById(id).populate("jugadores")
+    .populate("staff");
   return equipo;
 };
 
