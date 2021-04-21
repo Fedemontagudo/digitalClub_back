@@ -1,4 +1,7 @@
 const express = require("express");
+const multer = require("multer");
+const admin = require("firebase-admin");
+
 const {
   getEquipo,
   crearEquipo,
@@ -20,21 +23,22 @@ router.get("/", async (req, res, next) => {
   res.json(baseEquipo(equipoDevuelto));
 });
 
-router.post("/", async (req, res, next) => {
+router.post("/", multer().single("foto"), async (req, res, next) => {
   const error400 = notFoundError(req);
   if (error400) {
     return next(error400);
   }
-  const nuevoEquipo = req.body;
-  const { equipo, error } = await crearEquipo(nuevoEquipo);
-  if (error) {
-    next(error);
-  } else {
-    res.status(201).json({
-      id: nuevoEquipo.id,
-      nombre: nuevoEquipo.nombre
-    });
+  if (req.file) {
+    if (req.body) {
+      const nuevoEquipo = req.body;
+      const nuevaImagen = req.file;
+
+      const { equipo, error } = await crearEquipo(nuevoEquipo, nuevaImagen);
+    }
   }
+  res.status(201).json({
+    hola: "hola"
+  });
 });
 
 router.put("/:idEquipo", async (req, res, next) => {

@@ -1,4 +1,5 @@
 const Equipo = require("../db/modelos/equipo");
+const bucket = require("../utils/bucketfb");
 const { generaError } = require("../utils/errors");
 
 const getEquipo = async () => {
@@ -10,21 +11,24 @@ const getEquipo = async () => {
   return equipo;
 };
 
-const crearEquipo = async nuevoEquipo => {
+const crearEquipo = async (nuevoEquipo, nuevaImagen) => {
   const respuesta = {
     equipo: null,
     error: null
   };
-  const equipoEncontrado = await Equipo.findOne({
-    nombre: nuevoEquipo.nombre
+  const nuevoEquipoBD = await Equipo.create(nuevoEquipo);
+  const archivoMemoria = bucket.file(`equipo_${nuevoEquipoBD._id}`);
+  const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
+  archivoStream.end(nuevoEquipo.buffer);
+  archivoStream.on("error", err => console.log(err));
+  archivoStream.on("finish", () => {
   });
-  if (equipoEncontrado) {
-    const error = generaError("Ya existe este equipo en las base de datos de equipos", 409);
-    respuesta.error = error;
-  } else {
-    const nuevoEquipoBD = await Equipo.create(nuevoEquipo);
-    respuesta.jugador = nuevoEquipoBD;
-  }
+  const equipoParaPonerLinkImg = await Equipo.findById(nuevoEquipoBD._id);
+  equipoParaPonerLinkImg.img = {
+    link: `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/noticia_${nuevoEquipoBD._id}?alt=media`
+  };
+  equipoParaPonerLinkImg.save();
+  respuesta.equipo = nuevoEquipoBD;
   return respuesta;
 };
 

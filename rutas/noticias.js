@@ -51,7 +51,7 @@ router.post("/", multer().single("foto"), async (req, res, next) => {
 });
 // hay que meter toda esta mierda dentro del endpoint anterior, si me mandan noticia sin imagen, la subo,
 // si me la mandan con imagen, subo la noticia y la imagen
-router.post("/archivos",
+/* router.post("/archivos",
   multer().single("foto"),
   (req, res, next) => {
     if (req.file) {
@@ -65,7 +65,7 @@ router.post("/archivos",
     } else {
       res.json("no me has mandado nada");
     }
-  });
+  }); */
 
 router.put("/:idNoticia", async (req, res, next) => {
   const { idNoticia } = req.params;
