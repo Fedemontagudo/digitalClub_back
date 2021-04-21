@@ -37,7 +37,7 @@ const crearEquipo = async (nuevoEquipo, nuevaImagen) => {
   return respuesta;
 };
 
-const sustituirEquipo = async (idEquipo, equipoModificado) => {
+const sustituirEquipo = async (idEquipo, equipoModificado, nuevaImagen) => {
   const equipoEncontrado = await Equipo.findById(idEquipo);
   const respuesta = {
     equipo: null,
@@ -45,14 +45,21 @@ const sustituirEquipo = async (idEquipo, equipoModificado) => {
   };
   if (equipoEncontrado) {
     await equipoEncontrado.updateOne(equipoModificado);
-    respuesta.jugador = equipoModificado;
-  } else {
-    const { error, equipo } = await crearEquipo(equipoModificado);
-    if (error) {
-      respuesta.error = error;
-    } else {
-      respuesta.equipo = equipo;
-    }
+    respuesta.equipo = equipoModificado;
+    const archivoMemoria = bucket.file(`noticia_${idEquipo}`);
+    const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
+    archivoStream.end(nuevaImagen.buffer);
+    archivoStream.on("error", err => console.log(err));
+    archivoStream.on("finish", () => {
+    });
+    /*     const equipoParaPonerLinkImg = await Equipo.findById(equipoModificado._id);
+
+    noticiaParaPonerLinkImg.img = {
+      link: `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/noticia_${equipoModificado._id}?alt=media`
+    };
+    equipoParaPonerLinkImg.save();
+    respuesta.equipo = equipoModificado;
+    return respuesta; */
   }
   return respuesta;
 };

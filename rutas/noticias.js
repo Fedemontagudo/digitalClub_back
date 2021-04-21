@@ -37,16 +37,21 @@ router.post("/", multer().single("foto"), async (req, res, next) => {
   if (error400) {
     return next(error400);
   }
+  const nuevaNoticia = req.body;
+  const nuevaImagen = req.file;
   if (req.file) {
     if (req.body) {
-      const nuevaNoticia = req.body;
-      const nuevaImagen = req.file;
-
       const { noticia, error } = await crearNoticia(nuevaNoticia, nuevaImagen);
+    } else {
+      console.log("1111");
+      res.json({ respuesta: "no hay body, no puedes mandar una noticia sin titulo, esta prohibo" });
     }
+  } else {
+    const { noticia, error } = await crearNoticia(nuevaNoticia, nuevaImagen);
   }
+  console.log("33333");
   res.status(201).json({
-    hola: "hola"
+    respuesta: "noticia creada"
   });
 });
 // hay que meter toda esta mierda dentro del endpoint anterior, si me mandan noticia sin imagen, la subo,

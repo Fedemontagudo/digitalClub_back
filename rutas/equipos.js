@@ -44,14 +44,15 @@ router.post("/", multer().single("foto"), async (req, res, next) => {
     }
   }
   res.status(201).json({
-    hola: "hola"
+
   });
 });
 
-router.put("/:idEquipo", async (req, res, next) => {
+router.put("/:idEquipo", multer().single("foto"), async (req, res, next) => {
   const { idEquipo } = req.params;
   const equipoModificado = req.body;
-  const { error, equipo } = await sustituirEquipo(idEquipo, equipoModificado);
+  const nuevaImagen = req.file;
+  const { error, equipo } = await sustituirEquipo(idEquipo, equipoModificado, nuevaImagen);
   if (error) {
     next(error);
   } else {
