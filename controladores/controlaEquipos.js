@@ -1,4 +1,6 @@
 const Equipo = require("../db/modelos/equipo");
+const Jugador = require("../db/modelos/jugador");
+const Staff = require("../db/modelos/staff");
 const bucket = require("../utils/bucketfb");
 const { generaError } = require("../utils/errors");
 
@@ -17,23 +19,45 @@ const getUnEquipo = async id => {
   return equipo;
 };
 
-const crearEquipo = async (nuevoEquipo, nuevaImagen) => {
+const crearEquipo = async (nuevoEquipo, jugadores) => {
   const respuesta = {
     equipo: null,
     error: null
   };
-  const nuevoEquipoBD = await Equipo.create(nuevoEquipo);
-  const archivoMemoria = bucket.file(`equipo_${nuevoEquipoBD._id}`);
-  const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
-  archivoStream.end(nuevoEquipo.buffer);
-  archivoStream.on("error", err => console.log(err));
-  archivoStream.on("finish", () => {
+
+  const nuevoEquipoBD = await new Equipo({
+    nombre: nuevoEquipo.nombre
   });
-  const equipoParaPonerLinkImg = await Equipo.findById(nuevoEquipoBD._id);
-  equipoParaPonerLinkImg.img = {
-    link: `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/noticia_${nuevoEquipoBD._id}?alt=media`
-  };
-  equipoParaPonerLinkImg.save();
+  nuevoEquipoBD.save();
+  if (nuevoEquipo.jugadores) {
+    const arrayJugadores = JSON.parse(nuevoEquipo.jugadores);
+    const arrayJugadoresBD = await Jugador.create(
+      arrayJugadores.map(jugador => ({
+        nombre: jugador.nombre,
+        fecha_nacimiento: jugador.nacimiento,
+        rol: jugador.rol,
+        dorsal: jugador.dorsal
+      }))
+    );
+    arrayJugadoresBD.forEach(jugadorBD => {
+      nuevoEquipoBD.jugadores.push(jugadorBD._id);
+    });
+    nuevoEquipoBD.save();
+  }
+  if (nuevoEquipo.staff) {
+    const arrayStaff = JSON.parse(nuevoEquipo.staff);
+    const arrayStaffBD = await Staff.create(
+      arrayStaff.map(miembro => ({
+        nombre: miembro.nombre,
+        fecha_nacimiento: miembro.nacimiento,
+        rol: miembro.rol,
+      }))
+    );
+    arrayStaffBD.forEach(miembroBD => {
+      nuevoEquipoBD.staff.push(miembroBD._id);
+    });
+    nuevoEquipoBD.save();
+  }
   respuesta.equipo = nuevoEquipoBD;
   return respuesta;
 };

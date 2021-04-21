@@ -17,22 +17,15 @@ const crearJugador = async nuevoJugador => {
     jugador: null,
     error: null
   };
-  const jugadorEncontrado = await Jugador.findOne({
-    titulo: nuevoJugador.nombre
-  });
-  if (jugadorEncontrado) {
-    const error = generaError("Ya existe este jugador en la lista de equipos", 409);
-    respuesta.error = error;
-  } else {
-    const nuevoJugadorBD = await Jugador.create(nuevoJugador);
-    const idJugador = nuevoJugadorBD.id;
-    const idEquipo = nuevoJugador.equipo;
-    const jugadorIdEquipo = await Equipo.findByIdAndUpdate(
-      idEquipo,
-      { $push: { jugadores: idJugador } }
-    );
-    respuesta.jugador = nuevoJugadorBD;
-  }
+  const nuevoJugadorBD = await Jugador.create(nuevoJugador);
+  const idJugador = nuevoJugadorBD.id;
+  const idEquipo = nuevoJugador.equipo;
+  const jugadorIdEquipo = await Equipo.findByIdAndUpdate(
+    idEquipo,
+    { $push: { jugadores: idJugador } }
+  );
+  respuesta.jugador = nuevoJugadorBD;
+
   return respuesta;
 };
 
