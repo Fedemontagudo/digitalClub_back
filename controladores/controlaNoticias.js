@@ -19,17 +19,22 @@ const crearNoticia = async (nuevaNoticia, nuevaImagen) => {
   };
   const nuevaNoticiaBD = await Noticia.create(nuevaNoticia);
   const archivoMemoria = bucket.file(`noticia_${nuevaNoticiaBD._id}`);
-  const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
-  archivoStream.end(nuevaImagen.buffer);
-  archivoStream.on("error", err => console.log(err));
-  archivoStream.on("finish", () => {
-  });
-  const noticiaParaPonerLinkImg = await Noticia.findById(nuevaNoticiaBD._id);
-  noticiaParaPonerLinkImg.img = {
-    link: `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/noticia_${nuevaNoticiaBD._id}?alt=media`
-  };
-  noticiaParaPonerLinkImg.save();
-  respuesta.noticia = nuevaNoticiaBD;
+  if (nuevaImagen) {
+    const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
+    archivoStream.end(nuevaImagen.buffer);
+    archivoStream.on("error", err => console.log(err));
+    archivoStream.on("finish", () => {
+    });
+    const noticiaParaPonerLinkImg = await Noticia.findById(nuevaNoticiaBD._id);
+    noticiaParaPonerLinkImg.img = {
+      link: `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/noticia_${nuevaNoticiaBD._id}?alt=media`,
+      alt: nuevaNoticia.alt ? nuevaNoticia.alt : "una imagen sin alt"
+    };
+    noticiaParaPonerLinkImg.save();
+    respuesta.noticia = noticiaParaPonerLinkImg;
+  } else {
+    respuesta.noticia = nuevaNoticiaBD;
+  }
   return respuesta;
 };
 

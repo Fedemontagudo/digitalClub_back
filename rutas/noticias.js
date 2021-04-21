@@ -42,35 +42,21 @@ router.post("/", multer().single("foto"), async (req, res, next) => {
   if (req.file) {
     if (req.body) {
       const { noticia, error } = await crearNoticia(nuevaNoticia, nuevaImagen);
+      res.status(201).json({
+        respuesta: noticia
+      });
     } else {
       console.log("1111");
       res.json({ respuesta: "no hay body, no puedes mandar una noticia sin titulo, esta prohibo" });
     }
   } else {
     const { noticia, error } = await crearNoticia(nuevaNoticia, nuevaImagen);
+    console.log(noticia);
+    res.status(201).json({
+      respuesta: noticia
+    });
   }
-  console.log("33333");
-  res.status(201).json({
-    respuesta: "noticia creada"
-  });
 });
-// hay que meter toda esta mierda dentro del endpoint anterior, si me mandan noticia sin imagen, la subo,
-// si me la mandan con imagen, subo la noticia y la imagen
-/* router.post("/archivos",
-  multer().single("foto"),
-  (req, res, next) => {
-    if (req.file) {
-      const archivoMemoria = bucket.file(req.file.originalname);
-      const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
-      archivoStream.end(req.file.buffer);
-      archivoStream.on("error", err => console.log(err));
-      archivoStream.on("finish", () => {
-      });
-      res.json("Archivo subido");
-    } else {
-      res.json("no me has mandado nada");
-    }
-  }); */
 
 router.put("/:idNoticia", multer().single("foto"), async (req, res, next) => {
   const { idNoticia } = req.params;
