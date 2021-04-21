@@ -33,7 +33,7 @@ const crearNoticia = async (nuevaNoticia, nuevaImagen) => {
   return respuesta;
 };
 
-const sustituirNoticia = async (idNoticia, noticiaModificada) => {
+const sustituirNoticia = async (idNoticia, noticiaModificada, nuevaImagen) => {
   const noticiaEncontrada = await Noticia.findById(idNoticia);
   const respuesta = {
     noticia: null,
@@ -42,13 +42,20 @@ const sustituirNoticia = async (idNoticia, noticiaModificada) => {
   if (noticiaEncontrada) {
     await noticiaEncontrada.updateOne(noticiaModificada);
     respuesta.noticia = noticiaModificada;
-  } else {
-    const { error, noticia } = await crearNoticia(noticiaModificada);
-    if (error) {
-      respuesta.error = error;
-    } else {
-      respuesta.noticia = noticia;
-    }
+    const archivoMemoria = bucket.file(`noticia_${idNoticia}`);
+    const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
+    archivoStream.end(nuevaImagen.buffer);
+    archivoStream.on("error", err => console.log(err));
+    archivoStream.on("finish", () => {
+    });
+    /*     const noticiaParaPonerLinkImg = await Noticia.findById(noticiaModificada._id);
+
+    noticiaParaPonerLinkImg.img = {
+      link: `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/noticia_${noticiaModificada._id}?alt=media`
+    };
+    noticiaParaPonerLinkImg.save();
+    respuesta.noticia = noticiaModificada;
+    return respuesta; */
   }
   return respuesta;
 };

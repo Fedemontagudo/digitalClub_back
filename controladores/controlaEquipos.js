@@ -11,6 +11,11 @@ const getEquipo = async () => {
   return equipo;
 };
 
+const getUnEquipo = async id => {
+  const equipo = await Equipo.findById(id);
+  return equipo;
+};
+
 const crearEquipo = async (nuevoEquipo, nuevaImagen) => {
   const respuesta = {
     equipo: null,
@@ -66,6 +71,7 @@ const borrarEquipo = async idEquipo => {
 
 module.exports = {
   getEquipo,
+  getUnEquipo,
   crearEquipo,
   sustituirEquipo,
   borrarEquipo

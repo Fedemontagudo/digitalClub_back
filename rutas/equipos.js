@@ -6,7 +6,8 @@ const {
   getEquipo,
   crearEquipo,
   borrarEquipo,
-  sustituirEquipo
+  sustituirEquipo,
+  getUnEquipo
 } = require("../controladores/controlaEquipos");
 
 const { notFoundError } = require("../utils/errors");
@@ -21,6 +22,12 @@ const baseEquipo = equipo => ({
 router.get("/", async (req, res, next) => {
   const equipoDevuelto = await getEquipo();
   res.json(baseEquipo(equipoDevuelto));
+});
+
+router.get("/equipo/:idEquipo", async (req, res, next) => {
+  const id = req.params.idEquipo;
+  const equipo = await getUnEquipo(id);
+  res.json(equipo);
 });
 
 router.post("/", multer().single("foto"), async (req, res, next) => {
