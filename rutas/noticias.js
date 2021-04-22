@@ -36,16 +36,16 @@ router.get("/noticia/:idNoticia", async (req, res, next) => {
 });
 
 router.post("/", multer().single("foto"),
-  (req, res, next) => {
-    console.log(req.header("Authorization").split(" ")[1]); // PREGUNTA 1, por que narices no devuelve Bearer + el token? solo devuelve el token wtf
-    const token = req.header("Authorization").split(" ")[1];
-    try {
-      const infoUsuario = jwt.verify(token, process.env.JWT_SECRET);
-      console.log(infoUsuario);
-    } catch (err) {
-      return next(generaError(err.message, 403));
-    }
-  },
+  /*   (req, res, next) => {
+      console.log(req.header("Authorization").split(" ")[1]); // PREGUNTA 1, por que narices no devuelve Bearer + el token? solo devuelve el token wtf
+      const token = req.header("Authorization").split(" ")[1];
+      try {
+        const infoUsuario = jwt.verify(token, process.env.JWT_SECRET);
+        console.log(infoUsuario);
+      } catch (err) {
+        return next(generaError(err.message, 403));
+      }
+    }, */
   async (req, res, next) => {
     const error400 = notFoundError(req);
     if (error400) {
