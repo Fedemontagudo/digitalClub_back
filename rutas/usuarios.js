@@ -1,5 +1,7 @@
 const express = require("express");
 const { crearUsuario } = require("../controladores/controlaUsuarios");
+const { loginUsuario } = require("../controladores/usuarios");
+const Usuario = require("../db/modelos/usuario");
 
 const { notFoundError } = require("../utils/errors");
 
@@ -19,6 +21,16 @@ router.post("/", async (req, res, next) => {
       id: usuario.id,
       user: usuario.user
     });
+  }
+});
+
+router.post("/login", async (req, res, next) => {
+  const { user, password } = req.body;
+  const { error, usuario } = await loginUsuario(user, password);
+  if (error) {
+    next(error);
+  } else {
+    res.json({ token: usuario });
   }
 });
 
