@@ -35,42 +35,31 @@ router.get("/noticia/:idNoticia", async (req, res, next) => {
   res.json(noticia);
 });
 
-router.post("/", multer().single("foto"),
-  /*   (req, res, next) => {
-      console.log(req.header("Authorization").split(" ")[1]); // PREGUNTA 1, por que narices no devuelve Bearer + el token? solo devuelve el token wtf
-      const token = req.header("Authorization").split(" ")[1];
-      try {
-        const infoUsuario = jwt.verify(token, process.env.JWT_SECRET);
-        console.log(infoUsuario);
-      } catch (err) {
-        return next(generaError(err.message, 403));
-      }
-    }, */
-  async (req, res, next) => {
-    const error400 = notFoundError(req);
-    if (error400) {
-      return next(error400);
-    }
-    const nuevaNoticia = req.body;
-    const nuevaImagen = req.file;
-    if (req.file) {
-      if (req.body) {
-        const { noticia, error } = await crearNoticia(nuevaNoticia, nuevaImagen);
-        res.status(201).json({
-          respuesta: noticia
-        });
-      } else {
-        console.log("1111");
-        res.json({ respuesta: "no hay body, no puedes mandar una noticia sin titulo, esta prohibo" });
-      }
-    } else {
+router.post("/", multer().single("foto"), async (req, res, next) => {
+  const error400 = notFoundError(req);
+  if (error400) {
+    return next(error400);
+  }
+  const nuevaNoticia = req.body;
+  const nuevaImagen = req.file;
+  if (req.file) {
+    if (req.body) {
       const { noticia, error } = await crearNoticia(nuevaNoticia, nuevaImagen);
-      console.log(noticia);
       res.status(201).json({
         respuesta: noticia
       });
+    } else {
+      console.log("1111");
+      res.json({ respuesta: "no hay body, no puedes mandar una noticia sin titulo, esta prohibo" });
     }
-  });
+  } else {
+    const { noticia, error } = await crearNoticia(nuevaNoticia, nuevaImagen);
+    console.log(noticia);
+    res.status(201).json({
+      respuesta: noticia
+    });
+  }
+});
 
 router.put("/:idNoticia", multer().single("foto"), async (req, res, next) => {
   const { idNoticia } = req.params;

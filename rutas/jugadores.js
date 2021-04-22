@@ -17,11 +17,12 @@ const baseJugador = jugador => ({
 
 const router = express.Router();
 
-router.get("/", async (req, res, next) => {
-  const queryParams = req.query;
-  const jugadorDevuelto = await getJugadores();
-  res.json(baseJugador(jugadorDevuelto));
-});
+router.get("/",
+  async (req, res, next) => {
+    const queryParams = req.query;
+    const jugadorDevuelto = await getJugadores();
+    res.json(baseJugador(jugadorDevuelto));
+  });
 
 router.get("/jugador/:idJugador", async (req, res, next) => {
   const id = req.params.idJugador;

@@ -40,6 +40,13 @@ const crearNoticia = async (nuevaNoticia, nuevaImagen) => {
 
 const sustituirNoticia = async (idNoticia, noticiaModificada, nuevaImagen) => {
   const noticiaEncontrada = await Noticia.findById(idNoticia);
+  console.log(noticiaEncontrada);
+  let link = "";
+  if (noticiaEncontrada.img) {
+    console.log("entra");
+    link = noticiaEncontrada.img.link;
+  }
+
   const respuesta = {
     noticia: null,
     error: null
@@ -63,6 +70,8 @@ const sustituirNoticia = async (idNoticia, noticiaModificada, nuevaImagen) => {
       respuesta.noticia = noticiaParaPonerLinkImg;
     } else {
       respuesta.noticia = noticiaModificada;
+      respuesta.noticia.img = { link };
+      const noticiaParaPonerLinkImg = await Noticia.findById(idNoticia);
     }
   }
   return respuesta;

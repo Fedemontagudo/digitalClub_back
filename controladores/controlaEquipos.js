@@ -19,7 +19,7 @@ const getUnEquipo = async id => {
   return equipo;
 };
 
-const crearEquipo = async (nuevoEquipo, jugadores) => {
+const crearEquipo = async (nuevoEquipo, nuevaImagen) => {
   const respuesta = {
     equipo: null,
     error: null
@@ -28,7 +28,7 @@ const crearEquipo = async (nuevoEquipo, jugadores) => {
   const nuevoEquipoBD = await new Equipo({
     nombre: nuevoEquipo.nombre
   });
-  nuevoEquipoBD.save();
+  const archivoMemoria = bucket.file(`equipo_${nuevoEquipoBD._id}`);
   if (nuevoEquipo.jugadores) {
     const arrayJugadores = JSON.parse(nuevoEquipo.jugadores);
     const arrayJugadoresBD = await Jugador.create(
@@ -42,7 +42,7 @@ const crearEquipo = async (nuevoEquipo, jugadores) => {
     arrayJugadoresBD.forEach(jugadorBD => {
       nuevoEquipoBD.jugadores.push(jugadorBD._id);
     });
-    nuevoEquipoBD.save();
+    /*   nuevoEquipoBD.save(); */
   }
   if (nuevoEquipo.staff) {
     const arrayStaff = JSON.parse(nuevoEquipo.staff);
@@ -56,8 +56,22 @@ const crearEquipo = async (nuevoEquipo, jugadores) => {
     arrayStaffBD.forEach(miembroBD => {
       nuevoEquipoBD.staff.push(miembroBD._id);
     });
-    nuevoEquipoBD.save();
+    /*     nuevoEquipoBD.save(); */
   }
+  if (nuevaImagen) {
+    const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
+    archivoStream.end(nuevaImagen.buffer);
+    archivoStream.on("error", err => console.log(err));
+    archivoStream.on("finish", () => {
+    });
+    console.log(nuevoEquipo);
+    nuevoEquipoBD.img = {
+      link: `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/equipo_${nuevoEquipoBD._id}?alt=media`,
+      alt: nuevoEquipo.alt ? nuevoEquipo.alt : "una imagen sin alt"
+    };
+    respuesta.noticia = nuevoEquipoBD;
+  }
+  nuevoEquipoBD.save();
   respuesta.equipo = nuevoEquipoBD;
   return respuesta;
 };

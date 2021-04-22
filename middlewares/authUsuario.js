@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken");
-const { generaError } = require("../utils/errors");.
-
+const { generaError } = require("../utils/errors");
 
 const authUsuario = (req, res, next) => {
   const token = req.header("Authorization").split(" ")[1];
