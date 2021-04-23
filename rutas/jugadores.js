@@ -1,4 +1,5 @@
 const express = require("express");
+const authUsuario = require("../middlewares/authUsuario");
 
 const {
   getJugadores,

@@ -56,7 +56,6 @@ const crearEquipo = async (nuevoEquipo, nuevaImagen) => {
     arrayStaffBD.forEach(miembroBD => {
       nuevoEquipoBD.staff.push(miembroBD._id);
     });
-    /*     nuevoEquipoBD.save(); */
   }
   if (nuevaImagen) {
     const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
@@ -85,7 +84,7 @@ const sustituirEquipo = async (idEquipo, equipoModificado, nuevaImagen) => {
   if (equipoEncontrado) {
     await equipoEncontrado.updateOne(equipoModificado);
     respuesta.equipo = equipoModificado;
-    const archivoMemoria = bucket.file(`noticia_${idEquipo}`);
+    const archivoMemoria = bucket.file(`equipo_${idEquipo}`);
     const archivoStream = archivoMemoria.createWriteStream({ resumable: false });
     archivoStream.end(nuevaImagen.buffer);
     archivoStream.on("error", err => console.log(err));

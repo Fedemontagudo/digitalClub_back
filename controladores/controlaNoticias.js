@@ -46,7 +46,6 @@ const sustituirNoticia = async (idNoticia, noticiaModificada, nuevaImagen) => {
     console.log("entra");
     link = noticiaEncontrada.img.link;
   }
-
   const respuesta = {
     noticia: null,
     error: null
