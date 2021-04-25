@@ -3,8 +3,9 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const multer = require("multer");
 const admin = require("firebase-admin");
-
 const { JsonWebTokenError } = require("jsonwebtoken");
+const authUsuario = require("../middlewares/authUsuario");
+
 const {
   getNoticias,
   getNoticia,

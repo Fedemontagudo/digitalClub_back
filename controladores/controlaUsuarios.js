@@ -1,5 +1,12 @@
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 const Usuario = require("../db/modelos/usuario");
 const { generaError } = require("../utils/errors");
+
+const getUsuarios = async () => {
+  const usuarios = await Usuario.find();
+  return usuarios;
+};
 
 const crearUsuario = async nuevoUsuario => {
   const respuesta = {
@@ -19,6 +26,47 @@ const crearUsuario = async nuevoUsuario => {
   return respuesta;
 };
 
+const loginUsuario = async (user, password) => {
+  const usuarioEncontrado = await Usuario.findOne({
+    user,
+    password
+  });
+  const respuesta = {
+    error: null,
+    usuario: null
+  };
+  if (!usuarioEncontrado) {
+    respuesta.error = generaError("Credenciales erróneas", 403);
+  } else {
+    const token = jwt.sign({
+      id: usuarioEncontrado._id,
+      user: usuarioEncontrado.user,
+      rol: usuarioEncontrado.rol
+
+    }, process.env.JWT_SECRET, {
+      expiresIn: "7d"
+    });
+    respuesta.usuario = token;
+    console.log(token);
+  }
+  return respuesta;
+};
+
+const borrarUsuario = async (idUsuario) => {
+  const usuarioEncontrado = await Usuario.findByIdAndDelete(idUsuario);
+  const respuesta = {
+    usuario: null,
+    error: null
+  };
+  if (usuarioEncontrado) {
+    respuesta.usuario = usuarioEncontrado;
+    return respuesta;
+  }
+};
+
 module.exports = {
-  crearUsuario
+  getUsuarios,
+  crearUsuario,
+  loginUsuario,
+  borrarUsuario
 };

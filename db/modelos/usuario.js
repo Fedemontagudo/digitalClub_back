@@ -11,6 +11,7 @@ const UsuarioSchema = new Schema({
   },
   rol: {
     type: Number,
+    required: true
   }
 }, {
   timestamps: {
