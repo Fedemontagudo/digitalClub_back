@@ -36,52 +36,57 @@ router.get("/noticia/:idNoticia", async (req, res, next) => {
   res.json(noticia);
 });
 
-router.post("/", multer().single("foto"), async (req, res, next) => {
-  const error400 = notFoundError(req);
-  if (error400) {
-    return next(error400);
-  }
-  const nuevaNoticia = req.body;
-  const nuevaImagen = req.file;
-  if (req.file) {
-    if (req.body) {
+router.post("/",
+  authUsuario,
+  multer().single("foto"), async (req, res, next) => {
+    const error400 = notFoundError(req);
+    if (error400) {
+      return next(error400);
+    }
+    const nuevaNoticia = req.body;
+    const nuevaImagen = req.file;
+    if (req.file) {
+      if (req.body) {
+        const { noticia, error } = await crearNoticia(nuevaNoticia, nuevaImagen);
+        res.status(201).json({
+          respuesta: noticia
+        });
+      } else {
+        console.log("1111");
+        res.json({ respuesta: "no hay body, no puedes mandar una noticia sin titulo, esta prohibo" });
+      }
+    } else {
       const { noticia, error } = await crearNoticia(nuevaNoticia, nuevaImagen);
+      console.log(noticia);
       res.status(201).json({
         respuesta: noticia
       });
-    } else {
-      console.log("1111");
-      res.json({ respuesta: "no hay body, no puedes mandar una noticia sin titulo, esta prohibo" });
     }
-  } else {
-    const { noticia, error } = await crearNoticia(nuevaNoticia, nuevaImagen);
-    console.log(noticia);
-    res.status(201).json({
-      respuesta: noticia
-    });
-  }
-});
+  });
 
-router.put("/:idNoticia", multer().single("foto"), async (req, res, next) => {
-  const { idNoticia } = req.params;
-  const noticiaModificada = req.body;
-  const nuevaImagen = req.file;
-  const { error, noticia } = await sustituirNoticia(idNoticia, noticiaModificada, nuevaImagen);
-  if (error) {
-    next(error);
-  } else {
-    res.json(noticia);
-  }
-});
+router.put("/:idNoticia",
+  authUsuario,
+  multer().single("foto"), async (req, res, next) => {
+    const { idNoticia } = req.params;
+    const noticiaModificada = req.body;
+    const nuevaImagen = req.file;
+    const { error, noticia } = await sustituirNoticia(idNoticia, noticiaModificada, nuevaImagen);
+    if (error) {
+      next(error);
+    } else {
+      res.json(noticia);
+    }
+  });
 
-router.delete("/:idNoticia", async (req, res, next) => {
-  const { idNoticia } = req.params;
-  const { error, noticia } = await borrarNoticia(idNoticia);
-  if (error) {
-    next(error);
-  } else {
-    res.json(noticia);
-  }
-});
+router.delete("/:idNoticia",
+  authUsuario, async (req, res, next) => {
+    const { idNoticia } = req.params;
+    const { error, noticia } = await borrarNoticia(idNoticia);
+    if (error) {
+      next(error);
+    } else {
+      res.json(noticia);
+    }
+  });
 
 module.exports = router;
