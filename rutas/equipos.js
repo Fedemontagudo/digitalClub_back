@@ -55,13 +55,25 @@ router.post("/", multer().single("foto"), async (req, res, next) => {
 
 router.put("/:idEquipo", multer().single("foto"), async (req, res, next) => {
   const { idEquipo } = req.params;
-  const equipoModificado = req.body;
-  const nuevaImagen = req.file;
-  const { error, equipo } = await sustituirEquipo(idEquipo, equipoModificado, nuevaImagen);
-  if (error) {
-    next(error);
+  const error400 = notFoundError(req);
+  if (error400) {
+    return next(error400);
+  }
+  if (req.file) {
+    if (req.body) {
+      const equipoModificado = req.body;
+      const nuevaImagen = req.file;
+      const { error, equipo } = await sustituirEquipo(idEquipo, equipoModificado, nuevaImagen);
+      res.status(201).json({
+        equipo
+      });
+    }
   } else {
-    res.json(equipo);
+    const equipoModificado = req.body;
+    const { error, equipo } = await sustituirEquipo(idEquipo, equipoModificado);
+    res.status(201).json({
+      equipo
+    });
   }
 });
 
