@@ -31,61 +31,67 @@ router.get("/equipo/:idEquipo", async (req, res, next) => {
   res.json(equipo);
 });
 
-router.post("/", multer().single("foto"), async (req, res, next) => {
-  const error400 = notFoundError(req);
-  if (error400) {
-    return next(error400);
-  }
-  if (req.file) {
-    if (req.body) {
+router.post("/",
+  authUsuario,
+  multer().single("foto"), async (req, res, next) => {
+    const error400 = notFoundError(req);
+    if (error400) {
+      return next(error400);
+    }
+    if (req.file) {
+      if (req.body) {
+        const nuevoEquipo = req.body;
+        const nuevaImagen = req.file;
+        const { equipo, error } = await crearEquipo(nuevoEquipo, nuevaImagen);
+        res.status(201).json({
+          equipo
+        });
+      }
+    } else {
       const nuevoEquipo = req.body;
-      const nuevaImagen = req.file;
-      const { equipo, error } = await crearEquipo(nuevoEquipo, nuevaImagen);
+      const { equipo, error } = await crearEquipo(nuevoEquipo);
       res.status(201).json({
         equipo
       });
     }
-  } else {
-    const nuevoEquipo = req.body;
-    const { equipo, error } = await crearEquipo(nuevoEquipo);
-    res.status(201).json({
-      equipo
-    });
-  }
-});
+  });
 
-router.put("/:idEquipo", multer().single("foto"), async (req, res, next) => {
-  const { idEquipo } = req.params;
-  const error400 = notFoundError(req);
-  if (error400) {
-    return next(error400);
-  }
-  if (req.file) {
-    if (req.body) {
+router.put("/:idEquipo",
+  authUsuario,
+  multer().single("foto"), async (req, res, next) => {
+    const { idEquipo } = req.params;
+    const error400 = notFoundError(req);
+    if (error400) {
+      return next(error400);
+    }
+    if (req.file) {
+      if (req.body) {
+        const equipoModificado = req.body;
+        const nuevaImagen = req.file;
+        const { error, equipo } = await sustituirEquipo(idEquipo, equipoModificado, nuevaImagen);
+        res.status(201).json({
+          equipo
+        });
+      }
+    } else {
       const equipoModificado = req.body;
-      const nuevaImagen = req.file;
-      const { error, equipo } = await sustituirEquipo(idEquipo, equipoModificado, nuevaImagen);
+      const { error, equipo } = await sustituirEquipo(idEquipo, equipoModificado);
       res.status(201).json({
         equipo
       });
     }
-  } else {
-    const equipoModificado = req.body;
-    const { error, equipo } = await sustituirEquipo(idEquipo, equipoModificado);
-    res.status(201).json({
-      equipo
-    });
-  }
-});
+  });
 
-router.delete("/:idEquipo", async (req, res, next) => {
-  const { idEquipo } = req.params;
-  const { error, equipo } = await borrarEquipo(idEquipo);
-  if (error) {
-    next(error);
-  } else {
-    res.json(equipo);
-  }
-});
+router.delete("/:idEquipo",
+  authUsuario,
+  async (req, res, next) => {
+    const { idEquipo } = req.params;
+    const { error, equipo } = await borrarEquipo(idEquipo);
+    if (error) {
+      next(error);
+    } else {
+      res.json(equipo);
+    }
+  });
 
 module.exports = router;
